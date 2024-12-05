@@ -61,12 +61,22 @@ int UDPSocket::SendDatagram(char* msg, unsigned int msglen, struct sockaddr* si_
     return 0;
 }
 
-// Receive datagram from a client
+//// Receive datagram from a client
+//int UDPSocket::RecvDatagram(char* buf, unsigned int buflen, struct sockaddr* si_dest, int* slen) {
+//    if (recvfrom(s, buf, BUFLEN, 0, si_dest, slen) == SOCKET_ERROR) 
+//    {
+//        printf("recvfrom() failed with error code : %d", WSAGetLastError());
+//        exit(EXIT_FAILURE);
+//    }
+//    return 0;
+//}
 int UDPSocket::RecvDatagram(char* buf, unsigned int buflen, struct sockaddr* si_dest, int* slen) {
-    if (recvfrom(s, buf, BUFLEN, 0, si_dest, slen) == SOCKET_ERROR) 
-    {
-        printf("recvfrom() failed with error code : %d", WSAGetLastError());
-        exit(EXIT_FAILURE);
+    int recv_len = recvfrom(s, buf, buflen, 0, si_dest, (int*)slen);
+
+    if (recv_len == SOCKET_ERROR) {
+        printf("recvfrom() failed with error code : %d\n", WSAGetLastError());
+        return SOCKET_ERROR;  // Return the error code if there was an issue
     }
-    return 0;
+
+    return recv_len;  // Return the number of bytes received
 }
